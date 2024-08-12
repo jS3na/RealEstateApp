@@ -3,10 +3,11 @@ import React from 'react'
 import { Tabs } from 'expo-router'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { Colors } from '../../constants/Colors'
 
 export default function TabLayout() {
     return (
-        <Tabs screenOptions={{ headerShown:false }} >
+        <Tabs screenOptions={{ headerShown:false, tabBarActiveTintColor: Colors.PRIMARY }} >
             <Tabs.Screen 
                 name="Home"
                 options={{
