@@ -1,10 +1,11 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
+import Header from '../../components/Home/Header';
 
 export default function Home() {
     return (
         <View>
-            <Text style={styles.title}>Home</Text>
+            <Header />
         </View>
     )
 }
