@@ -7,25 +7,25 @@ import { Colors } from '../../constants/Colors'
 
 export default function TabLayout() {
     return (
-        <Tabs screenOptions={{ headerShown:false, tabBarActiveTintColor: Colors.PRIMARY }} >
+        <Tabs screenOptions={{ headerShown:false, tabBarActiveTintColor: Colors.PRIMARY_BOTTOM_TABS }} >
             <Tabs.Screen 
                 name="Home"
                 options={{
-                    tabBarIcon: ({color}) => <AntDesign name="home" size={24} color="black" />
+                    tabBarIcon: ({color}) => <AntDesign name="home" size={24} color={color} />
                 }}    
             />
             
             <Tabs.Screen 
                 name="Explore"
                 options={{
-                    tabBarIcon: ({color}) => <AntDesign name="search1" size={24} color="black" />
+                    tabBarIcon: ({color}) => <AntDesign name="search1" size={24} color={color} />
                 }}    
             />
 
             <Tabs.Screen 
             name="Profile"
             options={{
-                tabBarIcon: ({color}) => <Ionicons name="person-outline" size={24} color="black" />
+                tabBarIcon: ({color}) => <Ionicons name="person-outline" size={24} color={color} />
             }}    
         />
         </Tabs>
