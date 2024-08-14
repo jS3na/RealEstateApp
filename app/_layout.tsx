@@ -51,7 +51,7 @@ export default function RootLayout() {
     <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey} localization={ptBR}>
 
       <SignedIn>
-        <Stack>
+        <Stack screenOptions={{ headerShown:false }}>
           <Stack.Screen
             name="(tabs)"
             options={{

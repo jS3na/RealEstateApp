@@ -1,12 +1,19 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import React from 'react'
+
 import Header from '../../components/Home/Header';
+import Slide from '../../components/Home/Slide';
+import Category from '../../components/Home/Category';
+import PopularRealEstateList from '../../components/Home/PopularRealEstateList';
 
 export default function Home() {
     return (
-        <View>
+        <ScrollView>
             <Header />
-        </View>
+            <Slide />
+            <Category />
+            <PopularRealEstateList />
+        </ScrollView>
     )
 }
 
