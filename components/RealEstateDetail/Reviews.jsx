@@ -36,7 +36,7 @@ export default function Reviews({ data }) {
                 <Rating
                     imageSize={25}
                     showRating={false}
-                    defaultRating={4}
+                    startingValue={rating}
                     onFinishRating={(rating) => setRating(rating)}
                     style={{ padding: 10 }}
                 />
@@ -59,7 +59,6 @@ export default function Reviews({ data }) {
                                 imageSize={13}
                                 showRating={false}
                                 startingValue={item.rating}
-                                style={{ padding: 10 }}
                             />
                             <Text style={styles.userReview}>{item.review}</Text>
                         </View>
@@ -108,10 +107,16 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 10
+        gap: 10,
+        borderWidth: 1,
+        margin: 10,
+        padding: 10,
+        borderRadius: 15,
     },
     containerTextReview:{
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
+        gap: 10,
+        padding: 10
     },
     userName: {
         fontFamily: 'SpaceMono',
