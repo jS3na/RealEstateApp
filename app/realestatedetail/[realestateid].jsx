@@ -1,20 +1,19 @@
-import { ActivityIndicator, FlatList, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { ActivityIndicator, RefreshControl, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
-import { doc, getDoc, } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { firestore } from '../../configs/firebase';
 
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import { FontAwesome, FontAwesome5, FontAwesome6, MaterialCommunityIcons, MaterialIcons, AntDesign } from '@expo/vector-icons';
+import About from '../../components/RealEstateDetail/About';
+import Items from '../../components/RealEstateDetail/Items';
+import Values from '../../components/RealEstateDetail/Values';
+import Images from '../../components/RealEstateDetail/Images';
+import Reviews from '../../components/RealEstateDetail/Reviews';
 
 export default function RealEstateDetail() {
-
-    const [realStateDetails, setRealEstateDetails] = useState([])
-    const [loading, setLoading] = useState(false);
+    const [realStateDetails, setRealEstateDetails] = useState({});
+    const [loading, setLoading] = useState(true);
 
     const navigation = useNavigation();
     const { realestateid } = useLocalSearchParams();
@@ -23,44 +22,41 @@ export default function RealEstateDetail() {
         navigation.setOptions({
             headerShown: true,
             headerTitle: "Real Estate Detail"
-        }),
-            getRealEstateById();
+        });
+        getRealEstateById();
     }, []);
 
     const getRealEstateById = async () => {
-
-        setRealEstateDetails([]);
-        setLoading(true);
-
-        const docRef = doc(firestore, 'real-estate', realestateid);
-        const docSnap = await getDoc(docRef);
-
-        setRealEstateDetails(docSnap.data())
-        setLoading(false);
-    }
+        try {
+            const docRef = doc(firestore, 'real-estate', realestateid);
+            const docSnap = await getDoc(docRef);
+            setRealEstateDetails({id: docSnap.id, ...docSnap.data()} || {});
+        } catch (error) {
+            console.error("Error fetching real estate details:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
-
-        <ScrollView>
-            {loading ? <ActivityIndicator size={60} style={{ margin: 30 }} /> :
-
-                <>
-                    <FlatList
-                        data={realStateDetails.images}
-                        horizontal={true}
-                        style={{ marginLeft: 20 }}
-                        showsHorizontalScrollIndicator={false}
-                        renderItem={({ item, index }) => (
-                            <Image style={styles.realEstateImage} source={{ uri: item }} key={index} />
-                        )}
+        <>
+            {loading ? (
+                <ActivityIndicator size={60} style={{ margin: 30 }} />
+            ) : (
+                <ScrollView refreshControl={
+                    <RefreshControl
+                        refreshing={loading}
+                        onRefresh={getRealEstateById}
                     />
+                } style={{backgroundColor: 'white'}}>
+
+                    <Images data={realStateDetails.images} />
 
                     <View style={styles.containerDetails}>
 
-                        <Text style={styles.title} >{realStateDetails.name}</Text>
+                        <About title={realStateDetails.name} about={realStateDetails.about} />
 
                         <View style={styles.containerGridSpecificDetail}>
-
                             <View style={styles.containerSpecificDetail}>
                                 <FontAwesome5 name="map-marker-alt" size={24} color="black" />
                                 <Text>Bairro: {realStateDetails.neighborhood}</Text>
@@ -83,7 +79,7 @@ export default function RealEstateDetail() {
 
                             <View style={styles.containerSpecificDetail}>
                                 <FontAwesome5 name="car" size={24} color="black" />
-                                {realStateDetails.garage == 0 ?
+                                {realStateDetails.garage === 0 ?
                                     <Text> Não </Text> :
                                     <Text>{realStateDetails.garage} Vagas</Text>
                                 }
@@ -93,57 +89,26 @@ export default function RealEstateDetail() {
                                 <AntDesign name="tag" size={24} color="black" />
                                 <Text>{realStateDetails.category}</Text>
                             </View>
-
                         </View>
 
-                        <Text style={styles.about} >{realStateDetails.about}</Text>
+                        <Items data={realStateDetails.items} />
 
-                        <View style={styles.containerItems}>
+                        <Values valuesMap={realStateDetails.costDetails} />
 
-                            <Text>Itens Inclusos: </Text>
-
-                            <FlatList 
-                                data={realStateDetails.items}
-                                scrollEnabled={false}
-                                renderItem={({item, index}) => (
-                                    <View>
-                                        <FontAwesome name="check" size={24} color="black" />
-                                        <Text>{realStateDetails.items}</Text>
-                                    </View>
-                                )}
-                            />
-
-                        </View>
+                        <Reviews data={realStateDetails} />
 
                     </View>
-                </>
-            }
-        </ScrollView>
-    )
+                </ScrollView>
+            )}
+        </>
+    );
 }
 
 const styles = StyleSheet.create({
-    realEstateImage: {
-        width: 370,
-        height: 230,
-        margin: 20,
-        borderRadius: 20,
-    },
     containerDetails: {
-        display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
-    },
-    title: {
-        fontSize: 20,
-        textAlign: 'center',
-        fontWeight: 'bold'
-    },
-    about: {
-        fontSize: 15,
-        padding: 10,
-        textAlign: 'start',
-        marginLeft: 10
+        width: '100%',
+        justifyContent: 'flex-start'
     },
     containerGridSpecificDetail: {
         flexDirection: 'row',
@@ -155,10 +120,10 @@ const styles = StyleSheet.create({
     containerSpecificDetail: {
         gap: 20,
         padding: 10,
-        width: '48%', // Aproximadamente metade do container, ajusta o espaçamento
-        marginBottom: 10, // Espaçamento entre as linhas
+        width: '48%',
+        marginBottom: 10,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start'
-    }
-})
+    },
+});

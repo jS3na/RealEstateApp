@@ -19,7 +19,7 @@ export default function PopularRealEstateList() {
         const querySnapshot = await getDocs(queryFirestore);
 
         querySnapshot.forEach((doc) => {
-            setRealEstateList(prev => [...prev, {id: doc?.id, ...doc.data()}]);
+            setRealEstateList(prev => [...prev, { id: doc?.id, ...doc.data() }]);
         })
     }
 
@@ -30,12 +30,12 @@ export default function PopularRealEstateList() {
                 <Text style={styles.titleViewAll}>View All</Text>
             </View>
 
-            <FlatList 
+            <FlatList
                 data={realEstateList}
                 horizontal={true}
-                style={{marginLeft: 20}}
+                style={{ marginLeft: 20 }}
                 showsHorizontalScrollIndicator={false}
-                renderItem={({item,index}) => (
+                renderItem={({ item, index }) => (
                     <PopularRealEstateCard realestate={item} key={index} />
                 )}
             />
@@ -45,15 +45,15 @@ export default function PopularRealEstateList() {
 }
 
 const styles = StyleSheet.create({
-    title:{
+    title: {
         fontSize: 20,
         fontFamily: 'SpaceMono'
     },
-    titleViewAll:{
+    titleViewAll: {
         color: Colors.PRIMARY_BOTTOM_TABS,
         fontFamily: 'SpaceMono'
     },
-    containerTitle:{
+    containerTitle: {
         padding: 20,
         display: 'flex',
         flexDirection: 'row',
