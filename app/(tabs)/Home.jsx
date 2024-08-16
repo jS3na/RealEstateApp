@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 
 import Header from '../../components/Home/Header';
 import Slide from '../../components/Home/Slide';
@@ -7,6 +7,9 @@ import Category from '../../components/Home/Category';
 import PopularRealEstateList from '../../components/Home/PopularRealEstateList';
 
 export default function Home() {
+
+    const [refreshing, setRefreshing] = useState(false);
+
     return (
         <ScrollView>
             <Header />

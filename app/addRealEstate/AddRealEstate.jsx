@@ -1,4 +1,4 @@
-import { FlatList, Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { FlatList, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from 'expo-router'
 import * as ImagePicker from 'expo-image-picker';
@@ -13,11 +13,11 @@ export default function AddRealEstate() {
     const navigation = useNavigation();
 
     const [images, setImages] = useState([]);
-    const [imagesUrl, setImagesUrl] = useState([]);
-    const [items, setItems] = useState([]);
 
     const [categoriesList, setCategoriesList] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [itemsQuant, setItemsQuant] = useState(0);
+    const [items, setItems] = useState([]);
 
     const [name, setName] = useState('');
     const [about, setAbout] = useState('');
@@ -27,6 +27,7 @@ export default function AddRealEstate() {
     const [rooms, setRooms] = useState();
     const [size, setSize] = useState();
     const [garage, setGarage] = useState();
+    const [choosedItems, setChoosedItems] = useState([]);
 
 
     useEffect(() => {
@@ -87,11 +88,10 @@ export default function AddRealEstate() {
             });
 
             const uploadedUrls = await Promise.all(uploadPromises);
-            setImagesUrl(uploadedUrls);
 
             await addRealState(uploadedUrls);
         } catch (error) {
-            console.error('Erro ao carregar as imagens:', error);
+            console.error('erro:', error);
         }
     };
 
@@ -106,7 +106,8 @@ export default function AddRealEstate() {
                 neighborhood: neighborhood,
                 garage: garage,
                 images: uploadedUrls,
-                category: category
+                category: category,
+                items: choosedItems
             });
             console.log("Imóvel adicionado com sucesso!");
         } catch (error) {
@@ -114,9 +115,20 @@ export default function AddRealEstate() {
         }
     };
 
+    const handleItemsQuantity = (val) => {
+        const num = parseInt(val) || 0;
+        setItemsQuant(num);
+        setChoosedItems(Array.from({ length: num }, () => ''));
+    };
+
+    const handleItemChange = (val, index) => {
+        const updatedItems = [...choosedItems];
+        updatedItems[index] = val;
+        setChoosedItems(updatedItems);
+    };
 
     return (
-        <View style={styles.containerAddNew}>
+        <ScrollView style={styles.containerAddNew}>
 
             <View style={styles.containerTitles}>
                 <Text style={styles.title}>Add New Real Estate</Text>
@@ -183,11 +195,37 @@ export default function AddRealEstate() {
                 }}
             />
 
+            <Text style={styles.sectionTitle}>ITEMS</Text>
+
+            <View style={styles.containerItems}>
+
+                <View style={styles.containerTinyInner}>
+                    <TextInput onChangeText={(val) => handleItemsQuantity(val)} inputMode='numeric' style={styles.textTinyInputFirebase} placeholder='How many items' />
+                </View>
+
+                <FlatList
+                    data={choosedItems}
+                    keyExtractor={(item, index) => index.toString()}
+                    style={styles.flatListItems}
+                    renderItem={({ item, index }) => (
+                        <View style={styles.containerItemsInner}>
+                            <TextInput
+                                key={index}
+                                style={styles.textInputItems}
+                                placeholder={`Item ${index + 1}`}
+                                onChangeText={(val) => handleItemChange(val, index)}
+                            />
+                        </View>
+                    )}
+                />
+            </View>
+
             <Pressable onPress={() => handleAddNewRealEstate()} style={styles.buttonSubmit}>
                 <Text style={styles.textSubmit}>Add New Real Estate!</Text>
             </Pressable>
 
-        </View>
+
+        </ScrollView>
     )
 }
 
@@ -196,6 +234,11 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
         padding: 20,
+    },
+    sectionTitle: {
+        fontWeight: 'bold',
+        fontSize: 25,
+        alignSelf: 'center'
     },
     containerTitles: {
         margin: 20
@@ -234,6 +277,22 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 20,
         margin: 20,
+    },
+    containerItems: {
+        padding: 10,
+        margin: 20,
+        borderWidth: 1,
+        borderRadius: 20
+    },
+    flatListItems: {
+        padding: 10,
+        margin: 5,
+    },
+    containerItemsInner: {
+        padding: 10,
+        borderWidth: 1,
+        borderRadius: 20,
+        margin: 5,
     },
     buttonSubmit: {
         padding: 10,
