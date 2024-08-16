@@ -4,7 +4,7 @@ import { useLocalSearchParams, useNavigation } from 'expo-router'
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { firestore } from '../../configs/firebase';
 
-import RealEstateByCategoryCard from '../../components/Home/RealEstateByCategoryCard';
+import RealEstateByFilterCard from '../../components/Home/RealEstateByFilterCard';
 
 export default function RealEstateListByCategory() {
 
@@ -46,7 +46,7 @@ export default function RealEstateListByCategory() {
                     refreshing={loading}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => (
-                        <RealEstateByCategoryCard realestate={item} key={index} />
+                        <RealEstateByFilterCard realestate={item} key={index} />
                     )}
                 /> :
 

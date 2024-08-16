@@ -32,7 +32,7 @@ export default function RealEstateDetail() {
             const docSnap = await getDoc(docRef);
             setRealEstateDetails({id: docSnap.id, ...docSnap.data()} || {});
         } catch (error) {
-            console.error("Error fetching real estate details:", error);
+            console.error("deu erro irmao:", error);
         } finally {
             setLoading(false);
         }

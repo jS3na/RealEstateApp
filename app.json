@@ -28,7 +28,13 @@
     },
     "plugins": [
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Give Permission to the app to upload images of your New Property!c"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

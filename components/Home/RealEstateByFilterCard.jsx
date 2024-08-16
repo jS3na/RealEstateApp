@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image, Pressable } from 'react-native'
 import React from 'react'
 import { useRouter } from 'expo-router';
 
-export default function RealEstateByCategoryCard({ realestate }) {
+export default function RealEstateByFilterCard({ realestate }) {
 
     const router = useRouter();
 
