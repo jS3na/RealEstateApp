@@ -18,8 +18,10 @@ This app is a cutting-edge, user-friendly platform designed to streamline the ma
 - ⭐ Review and rating star system
 - 🎠 Image carousel to browse property photos.
 
-<img src="./screenshots/example.jpg" alt="App Real Estate Example" height="500"/>
-<img src="./screenshots/review.jpg" alt="App Real Estate Review" height="500"/>
+<div style="display: flex; flex-direction: row;">
+  <img src="./screenshots/example.jpg" alt="App Real Estate Example" height="500"/>
+  <img src="./screenshots/review.jpg" alt="App Real Estate Review" height="500"/>
+</div>
 
 - 👤 Secure login using Clerk, with support for multiple authentication methods, including OAuth with Google.
 
@@ -27,6 +29,8 @@ This app is a cutting-edge, user-friendly platform designed to streamline the ma
 
 - 🔒 Profile Screen with the Real Estates of the actual user and an add new real estate option
 
-<img src="./screenshots/profile.jpg" alt="App Profile" height="500"/>
-<img src="./screenshots/myproperties.jpg" alt="App My Properties" height="500"/>
-<img src="./screenshots/addproperty.jpg" alt="App Add Property" height="500"/>
+<div style="display: flex; flex-direction: row;">
+  <img src="./screenshots/profile.jpg" alt="App Profile" height="500"/>
+  <img src="./screenshots/myproperties.jpg" alt="App My Properties" height="500"/>
+  <img src="./screenshots/addproperty.jpg" alt="App Add Property" height="500"/>
+</div>
