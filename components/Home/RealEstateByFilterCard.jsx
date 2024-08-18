@@ -1,59 +1,69 @@
-import { StyleSheet, Text, View, Image, Pressable } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
+import React from 'react';
 import { useRouter } from 'expo-router';
 
 export default function RealEstateByFilterCard({ realestate }) {
-
     const router = useRouter();
 
     const totalCost = Object.values(realestate.costDetails).reduce((sum, value) => sum + value, 0);
     const formattedTotalCost = new Intl.NumberFormat('pt-BR', {
         style: 'currency',
-        currency: 'BRL',
+        currency: 'USD',
         minimumFractionDigits: 2
     }).format(totalCost);
 
     return (
-        <Pressable onPress={() => router.push('/realestatedetail/'+realestate.id)} style={styles.containerRealEstateCategory}>
-            <View style={styles.Card}>
-                <Image style={styles.realEstateImage} source={{ uri: realestate.images[0] }} />
-                <Text style={styles.realEstateValue}>{formattedTotalCost}</Text>
-                <Text style={styles.realEstateSubtitle}>{realestate.rooms} quarto(s)</Text>
-                <Text style={styles.realEstateSubtitle}>Bairro {realestate.neighborhood}</Text>
+        <Pressable
+            onPress={() => router.push(`/realestatedetail/${realestate.id}`)}
+            style={styles.container}
+        >
+            <View style={styles.card}>
+                <Image style={styles.image} source={{ uri: realestate.images[0] }} />
+                <View style={styles.infoContainer}>
+                    <Text style={styles.price}>{formattedTotalCost}</Text>
+                    <Text style={styles.subtitle}>{realestate.rooms} room(s)</Text>
+                    <Text style={styles.subtitle}>{realestate.neighborhood}</Text>
+                </View>
             </View>
         </Pressable>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
-    containerRealEstateCategory: {
-        margin: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
-        backgroundColor: 'white',
-        borderRadius: 15
-    },
-    Card: {
+    container: {
+        margin: 15,
+        padding: 10,
+        backgroundColor: '#fff',
         borderRadius: 15,
+        elevation: 3,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+    },
+    card: {
+        borderRadius: 15,
+        overflow: 'hidden',
         alignItems: 'center',
-        justifyContent: 'center',
-        gap: 5
     },
-    realEstateImage: {
-        width: 370,
-        height: 230,
-        borderRadius: 15
+    image: {
+        width: '100%',
+        height: 200,
+        resizeMode: 'cover',
     },
-    realEstateSubtitle: {
-        alignSelf: 'flex-start',
-        marginLeft: 13,
-        color: 'gray'
+    infoContainer: {
+        padding: 10,
+        alignItems: 'flex-start',
+        width: '100%',
     },
-    realEstateValue: {
-        alignSelf: 'flex-start',
-        marginLeft: 13,
+    price: {
+        fontSize: 24,
         fontWeight: 'bold',
-        fontSize: 30
-    }
-})
+        color: '#333',
+    },
+    subtitle: {
+        fontSize: 16,
+        color: '#666',
+        marginTop: 5,
+    },
+});

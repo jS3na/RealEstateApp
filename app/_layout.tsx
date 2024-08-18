@@ -8,7 +8,7 @@ import * as SecureStore from 'expo-secure-store'
 
 import Login from '../components/Login'
 
-const tokenCache = {
+const tokenCache = { //used for storage locally the user session
   async getToken(key: string) {
     try {
       const item = await SecureStore.getItemAsync(key)
@@ -33,7 +33,7 @@ const tokenCache = {
   },
 }
 
-const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!
+const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY! //the clerk api key
 
 if (!publishableKey) {
   throw new Error(
@@ -43,12 +43,18 @@ if (!publishableKey) {
 
 export default function RootLayout() {
 
-  useFonts({
-    'SpaceMono': require('../assets/fonts/SpaceMono-Regular.ttf')
-  })
+  const [fontsLoaded] = useFonts({
+    'SpaceMono': require('../assets/fonts/SpaceMono-Regular.ttf'),
+  });
+  
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey} localization={ptBR}>
+
+    <StatusBar barStyle="light-content" backgroundColor="#f7b801" />
 
       <SignedIn>
         <Stack screenOptions={{ headerShown:false }}>

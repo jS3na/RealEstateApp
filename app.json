@@ -19,7 +19,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.senas.locanndo"
     },
     "web": {
       "bundler": "metro",
@@ -38,6 +42,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "70640a45-7b5b-4851-87db-befc35b99da1"
+      }
     }
   }
 }

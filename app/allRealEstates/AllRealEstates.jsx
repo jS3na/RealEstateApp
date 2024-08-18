@@ -1,48 +1,45 @@
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { useLocalSearchParams, useNavigation } from 'expo-router'
+import { useUser } from '@clerk/clerk-expo';
+import { useNavigation } from 'expo-router';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { firestore } from '../../configs/firebase';
-
 import RealEstateByFilterCard from '../../components/Home/RealEstateByFilterCard';
 
-export default function RealEstateListByCategory() { //page that shows Real Estates based in his categories
+export default function AllRealEstates() { //page that shows all real estates
 
-    const [RealEstateByCategory, setRealEstateByCategory] = useState([]);
-
-    const [loading, setLoading] = useState(false);
-
+    const user = useUser();
     const navigation = useNavigation();
-    const { category } = useLocalSearchParams();
+    const [allRealEstates, setAllRealEstates] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         navigation.setOptions({
             headerShown: true,
-            headerTitle: category
+            headerTitle: "All Real Estates"
         }),
-            getRealEstateList();
+        getAllRealEstates()
     }, []);
 
-    const getRealEstateList = async () => { //get all Real Estates with the category that was choosed
-        setLoading(true)
-        setRealEstateByCategory([]);
-        const queryFirestore = query(collection(firestore, 'real-estate'), where("category", "==", category));
+    const getAllRealEstates = async () => { //search all real estates availables in the firestore
+        setLoading(true);
+        setAllRealEstates([]);
+        const queryFirestore = query(collection(firestore, 'real-estate'));
         const querySnapshot = await getDocs(queryFirestore);
 
         querySnapshot.forEach((doc) => {
-            setRealEstateByCategory(prev => [...prev, {id: doc?.id, ...doc.data()}]);
+            setAllRealEstates(prev => [...prev, {id: doc?.id, ...doc.data()}]);
         })
 
-        setLoading(false)
-
+        setLoading(false);
     }
 
     return (
         <View>
-            {RealEstateByCategory?.length > 0 && !loading ?
+            {allRealEstates?.length > 0 && !loading ?
                 <FlatList
-                    data={RealEstateByCategory}
-                    onRefresh={getRealEstateList}
+                    data={allRealEstates}
+                    onRefresh={getAllRealEstates}
                     refreshing={loading}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => (

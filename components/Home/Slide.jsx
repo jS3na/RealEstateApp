@@ -1,11 +1,13 @@
-import { View, Text, Image, StyleSheet, FlatList } from 'react-native'
+import { View, Text, Image, StyleSheet, FlatList, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 
-import { collection, getDocs, query, QuerySnapshot } from 'firebase/firestore'
+import { collection, getDocs, limit, query } from 'firebase/firestore'
 import { firestore } from '../../configs/firebase'
+import { useRouter } from 'expo-router'
 
 export default function Slide() {
 
+    const router = useRouter();
     const [sliderList, setSliderList] = useState([]);
 
     useEffect(() => {
@@ -14,47 +16,59 @@ export default function Slide() {
 
     const getSlides = async () => {
         setSliderList([]);
-        const queryFirestore = query(collection(firestore, 'slider-home'));
+        const queryFirestore = query(
+            collection(firestore, 'real-estate'),
+            limit(2)
+        );
         const querySnapshot = await getDocs(queryFirestore);
 
-        querySnapshot.forEach((doc) => {
-            setSliderList(prev => [...prev,doc.data()]);
-        })
+        const slides = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
 
-        await console.warn(sliderList[0].imageUrl);
+        setSliderList(slides);
     }
 
+    const renderItem = ({ item }) => (
+        <Pressable onPress={() => router.push(`/realestatedetail/${item.id}`)}>
+            <Image style={styles.sliderImage} source={{ uri: item.images[2] }} />
+        </Pressable>
+    );
+
     return (
-        <View>
+        <View style={styles.container}>
             <Text style={styles.title}>
                 Special for You
             </Text>
 
-            <FlatList 
+            <FlatList
                 data={sliderList}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
-                style={{paddingLeft: 20}}
-                renderItem={({item, index}) => (
-                    <Image style={styles.sliderImage} source={{uri: item.imageUrl}}/>
-                )}
+                keyExtractor={(item) => item.id}
+                renderItem={renderItem}
+                style={styles.list}
             />
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    title:{
+    container: {
+        gap: 10
+    },
+    title: {
         fontFamily: 'SpaceMono',
         fontSize: 20,
         paddingLeft: 20,
         paddingTop: 20,
         marginBottom: 5
     },
-    sliderImage:{
-        width: 300,
-        height: 150,
+    sliderImage: {
+        width: 350,
+        height: 200,
         borderRadius: 15,
-        marginRight: 20
-    }
+        marginHorizontal: 20
+    },
 });

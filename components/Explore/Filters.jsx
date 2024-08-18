@@ -1,53 +1,70 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { collection, getDocs, query } from 'firebase/firestore'
-import { firestore } from '../../configs/firebase'
-import { SelectList } from 'react-native-dropdown-select-list'
-import { useRouter } from 'expo-router'
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { collection, getDocs, query } from 'firebase/firestore';
+import { firestore } from '../../configs/firebase';
+import RNPickerSelect from 'react-native-picker-select';
+import { useRouter } from 'expo-router';
 
 export default function Filters() {
     const router = useRouter();
 
+    const [categoriesList, setCategoriesList] = useState([]);
+    const [neighborhoodsList, setNeighborhoodsList] = useState([]);
+
     const [loading, setLoading] = useState(true);
     const [categories, setCategories] = useState([]);
     const [neighborhoods, setNeighborhoods] = useState([]);
-    const [categorySelected, setCategorySelected] = useState("Studio");
-    const [neighborhoodSelected, setNeighborhoodSelected] = useState("Centro");
+    const [categorySelected, setCategorySelected] = useState();
+    const [neighborhoodSelected, setNeighborhoodSelected] = useState();
     const [roomSelected, setRoomsSelected] = useState(1);
     const [filters, setFilters] = useState([]);
 
     const roomsOptions = [
-        { key: '1', value: 1 },
-        { key: '2', value: 2 },
-        { key: '3', value: 3 },
-        { key: '4', value: 4 }
+        { value: 1, label: '1' },
+        { value: 2, label: '2' },
+        { value: 3, label: '3' },
+        { value: 4, label: '4' }
     ];
 
     useEffect(() => {
         getFilters();
+        getCategories();
     }, []);
 
     const getFilters = async () => {
+        setNeighborhoodsList([]);
         const queryFirestore = query(collection(firestore, 'real-estate'));
         const querySnapshot = await getDocs(queryFirestore);
 
-        const formattedCategories = [];
         const formattedNeighborhoods = [];
 
         querySnapshot.forEach((doc) => {
             const data = doc.data();
-            if (data.category) {
-                formattedCategories.push({ key: doc.id, value: data.category });
-            }
             if (data.neighborhood) {
-                formattedNeighborhoods.push({ key: doc.id, value: data.neighborhood });
+                formattedNeighborhoods.push({ value: data.neighborhood, label: data.neighborhood });
             }
         });
 
-        setCategories(formattedCategories);
-        setNeighborhoods(formattedNeighborhoods);
+        setNeighborhoodsList(formattedNeighborhoods);
         setLoading(false);
     };
+
+    const getCategories = async () => { //to get the categories available
+        setLoading(true);
+        setCategoriesList([]);
+
+        const queryFirestore = query(collection(firestore, 'category-home'));
+        const querySnapshot = await getDocs(queryFirestore);
+
+        querySnapshot.forEach((doc) => {
+            setCategoriesList(prev => [...prev, {
+                label: (doc?.data()).name,
+                value: (doc?.data()).name
+            }]);
+        })
+
+        setLoading(false);
+    }
 
     useEffect(() => {
         if (filters.length > 0) {
@@ -59,55 +76,50 @@ export default function Filters() {
         setFilters([categorySelected, neighborhoodSelected, roomSelected]);
     };
 
-    const SelectListCard = ({ setSelected, data, placeholder }) => {
-        return (
-            <SelectList
-                setSelected={(val) => setSelected(val)}
-                data={data}
-                style={styles.dropDownMenu}
-                save="value"
-                placeholder={placeholder}
-                search={false}
-                boxStyles={styles.box} 
-                inputStyles={styles.input}
-                dropdownStyles={styles.dropdown}
-            />
-        );
-    };
-
     return (
         <>
             {loading ? (
                 <ActivityIndicator size={60} style={{ margin: 30 }} />
             ) : (
                 <View style={styles.containerDropDown}>
-
                     <View style={styles.containerTitle}>
                         <Text style={styles.title}>Find the Property of Your</Text>
                         <Text style={styles.dreams}>DREAMS</Text>
                         <Text style={styles.title}>Now!</Text>
                     </View>
 
-                    <SelectListCard
-                        setSelected={setCategorySelected}
-                        data={categories}
-                        placeholder="Categories"
+                    <RNPickerSelect
+                        onValueChange={(value) => setCategorySelected(value)}
+                        items={categoriesList}
+                        placeholder={{
+                            label: 'Select the Category',
+                            value: null,
+                            color: 'gray',
+                        }}
                     />
 
-                    <SelectListCard
-                        setSelected={setNeighborhoodSelected}
-                        data={neighborhoods}
-                        placeholder="Neighborhoods"
+                    <RNPickerSelect
+                        onValueChange={(value) => setNeighborhoodSelected(value)}
+                        items={neighborhoodsList}
+                        placeholder={{
+                            label: 'Select the neighborhoods',
+                            value: null,
+                            color: 'gray',
+                        }}
                     />
 
-                    <SelectListCard
-                        setSelected={setRoomsSelected}
-                        data={roomsOptions}
-                        placeholder="Rooms"
+                    <RNPickerSelect
+                        onValueChange={(value) => setRoomsSelected(value)}
+                        items={roomsOptions}
+                        placeholder={{
+                            label: 'Select the Rooms',
+                            value: null,
+                            color: 'gray',
+                        }}
                     />
 
                     <Pressable style={styles.findButton} onPress={Find}>
-                        <Text>Discover</Text>
+                        <Text style={styles.findButtonText}>Discover</Text>
                     </Pressable>
                 </View>
             )}
@@ -118,35 +130,37 @@ export default function Filters() {
 const styles = StyleSheet.create({
     containerDropDown: {
         display: 'flex',
-        justifyContent: 'start',
-        backgroundColor: 'white',
+        justifyContent: 'flex-start',
         height: '100%',
-        padding: 20
+        padding: 20,
+        paddingTop: 80,
     },
     containerTitle: {
-        margin: 50,
+        marginBottom: 30,
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 10
     },
-    title:{
+    title: {
         fontFamily: 'SpaceMono',
         fontSize: 20,
-        textAlign: 'center'
-    },
-    dreams:{
-        fontFamily: 'SpaceMono',
-        fontSize: 30,
         textAlign: 'center',
-        color: 'orange'
+        color: '#333',
+    },
+    dreams: {
+        fontFamily: 'SpaceMono',
+        fontSize: 32,
+        textAlign: 'center',
+        color: '#f7b801',
+        fontWeight: 'bold',
     },
     box: {
         borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
-        padding: 10,
+        borderColor: '#ddd',
+        borderRadius: 10,
+        padding: 15,
         backgroundColor: '#f9f9f9',
-        margin: 10
+        marginVertical: 10,
+        elevation: 2,
     },
     input: {
         fontSize: 16,
@@ -154,16 +168,20 @@ const styles = StyleSheet.create({
     },
     dropdown: {
         backgroundColor: '#fff',
-        borderRadius: 5,
+        borderRadius: 10,
     },
     findButton: {
-        backgroundColor: 'lightyellow',
-        borderWidth: 1,
-        padding: 15,
-        borderRadius: 20,
-        borderColor: '#ccc',
+        backgroundColor: '#f7b801',
+        borderRadius: 25,
+        paddingVertical: 15,
+        marginTop: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 10
-    }
+        elevation: 10,
+    },
+    findButtonText: {
+        fontFamily: 'SpaceMono',
+        fontSize: 18,
+        color: '#fff',
+    },
 });

@@ -13,13 +13,13 @@ export default function RealEstateFind() {
     const [filteredResult, setFilteredResult] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    const filterArray = Array.isArray(filters) ? filters : filters.split(',');
+    const filterArray = Array.isArray(filters) ? filters : filters.split(','); //split the filters that was passed by a prop
 
     useEffect(() => {
         getFilteredRealEstate();
     }, [])
     
-    const getFilteredRealEstate = async () => {
+    const getFilteredRealEstate = async () => { //verify if have some Real Estate that attend the filter
         setFilteredResult([]);
         setLoading(true);
 
@@ -42,7 +42,7 @@ export default function RealEstateFind() {
     useEffect(() => {
         navigation.setOptions({
             headerShown: true,
-            headerTitle: 'Encontre'
+            headerTitle: 'Find'
         })
     }, []);
 
@@ -69,4 +69,11 @@ export default function RealEstateFind() {
     )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    notFoundText: {
+        alignSelf: 'center',
+        marginTop: 50,
+        fontFamily: 'SpaceMono',
+        fontSize: 20
+    }
+})

@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginRight: 20,
         backgroundColor: 'white',
-        padding: 10,
+        padding: 20,
         borderRadius: 20
     },
     sliderImage:{
@@ -35,7 +35,8 @@ const styles = StyleSheet.create({
         fontFamily: 'SpaceMono',
         fontSize: 12,
         width: 270,
-        textAlign: 'center'
+        textAlign: 'center',
+        margin: 5
 
     }
 })

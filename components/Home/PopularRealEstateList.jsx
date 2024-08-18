@@ -1,11 +1,14 @@
-import { StyleSheet, Text, View, FlatList } from 'react-native'
+import { StyleSheet, Text, View, FlatList, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Colors } from '../../constants/Colors'
 import { collection, getDocs, limit, query } from 'firebase/firestore'
 import { firestore } from '../../configs/firebase'
 import PopularRealEstateCard from './PopularRealEstateCard'
+import { useRouter } from 'expo-router'
 
 export default function PopularRealEstateList() {
+
+    const router = useRouter();
 
     const [realEstateList, setRealEstateList] = useState([]);
 
@@ -27,7 +30,9 @@ export default function PopularRealEstateList() {
         <View>
             <View style={styles.containerTitle}>
                 <Text style={styles.title}>Popular Real Estate</Text>
-                <Text style={styles.titleViewAll}>View All</Text>
+                <Pressable onPress={() => router.push('/allRealEstates/AllRealEstates')}>
+                    <Text style={styles.titleViewAll}>View All</Text>
+                </Pressable>
             </View>
 
             <FlatList

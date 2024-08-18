@@ -5,7 +5,7 @@ import { useUser } from '@clerk/clerk-expo';
 import UserInfo from '../../components/Profile/UserInfo';
 import ProfileMenuList from '../../components/Profile/ProfileMenuList';
 
-export default function Profile() {
+export default function Profile() { //Profile page
 
     const { user } = useUser();
 

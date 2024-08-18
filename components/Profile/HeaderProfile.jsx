@@ -14,7 +14,6 @@ export default function HeaderProfile() {
                 <View>
                     <Text style={styles.name}>Profile</Text>
                 </View>
-
         </View>
     )
 }
@@ -23,7 +22,7 @@ const styles = StyleSheet.create({
     container: {
         padding: 20,
         paddingTop: 40,
-        backgroundColor: Colors.PRIMARY_BACKGROUND,
+        backgroundColor: '#f7b801',
         borderBottomRightRadius: 20,
         borderBottomLeftRadius: 20,
     },

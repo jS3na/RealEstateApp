@@ -3,7 +3,7 @@ import React from 'react'
 import Header from '../../components/Home/Header'
 import Filters from '../../components/Explore/Filters'
 
-export default function Explore() {
+export default function Explore() { //Explore page
     return (
         <View>
             <Header />

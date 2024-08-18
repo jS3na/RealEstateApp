@@ -1,11 +1,11 @@
-import React, { useState, useCallback, useEffect } from 'react'
-import { useSignIn } from '@clerk/clerk-expo'
-import { useRouter } from 'expo-router'
-import { Text, TextInput, View, StyleSheet, Pressable, StatusBar } from 'react-native'
+import React, { useState, useCallback } from 'react';
+import { useSignIn } from '@clerk/clerk-expo';
+import { useRouter } from 'expo-router';
+import { Text, TextInput, View, StyleSheet, Pressable, StatusBar } from 'react-native';
 
-import { useOAuth } from '@clerk/clerk-expo'
-import { useWarmUpBrowser  } from '@/hooks/useWarmUpBrowser'
-import * as WebBrowser from 'expo-web-browser'
+import { useOAuth } from '@clerk/clerk-expo';
+import { useWarmUpBrowser } from '../hooks/useWarmUpBrowser';
+import * as WebBrowser from 'expo-web-browser';
 
 import AntDesign from '@expo/vector-icons/AntDesign';
 
@@ -15,125 +15,157 @@ export default function Login() {
 
     useWarmUpBrowser();
 
-    const { signIn, setActive, isLoaded } = useSignIn()
-    const { startOAuthFlow } = useOAuth({ strategy: 'oauth_google' })
+    const { signIn, setActive, isLoaded } = useSignIn();
+    const { startOAuthFlow } = useOAuth({ strategy: 'oauth_google' });
 
-    const router = useRouter()
+    const router = useRouter();
 
-    const [emailAddress, setEmailAddress] = useState('')
-    const [password, setPassword] = useState('')
+    const [emailAddress, setEmailAddress] = useState('');
+    const [password, setPassword] = useState('');
 
     const [errorMessage, setErrorMessage] = useState('');
 
-    const ErrorMessage = ({ message }) => (
-        message ? <Text style={{ color: 'red', textAlign: 'center' }}>{message}</Text> : null
-    );
+    const ErrorMessage = ({ message }) =>
+        message ? <Text style={styles.errorText}>{message}</Text> : null;
 
     const onSignEmailPass = useCallback(async () => {
         if (!isLoaded) {
-            return
+            return;
         }
 
         try {
             const signInAttempt = await signIn.create({
                 identifier: emailAddress,
                 password,
-            })
+            });
 
             if (signInAttempt.status === 'complete') {
-                await setActive({ session: signInAttempt.createdSessionId })
-                router.replace('/')
+                await setActive({ session: signInAttempt.createdSessionId });
+                router.replace('/');
             } else {
-                console.error(JSON.stringify(signInAttempt, null, 2))
+                console.error(JSON.stringify(signInAttempt, null, 2));
             }
         } catch (err) {
-            const errorMessage = err.errors[0]?.message || 'Ocorreu um erro ao tentar fazer login.';
+            const errorMessage = err.errors[0]?.message || 'Error.';
 
             if (errorMessage.toLowerCase().includes('enter password')) {
-                setErrorMessage('Insira uma senha');
+                setErrorMessage('Enter Password');
             } else {
                 setErrorMessage(errorMessage);
             }
-
         }
-    }, [isLoaded, emailAddress, password])
+    }, [isLoaded, emailAddress, password]);
 
     const onSignOAuth = useCallback(async () => {
-        try {
-            const { createdSessionId, signIn, signUp, setActive } = await startOAuthFlow();
+        try{
+            const { createdSessionId, signIn, signUp, setActive} =
+                await startOAuthFlow();
 
-            if (setActive && createdSessionId) {
-                setActive({ session: createdSessionId })
-            } else {
+            if(createdSessionId){
+                setActive({ session: createdSessionId });
             }
-        } catch (err) {
-            console.error('OAuth error', err)
-        }
-    }, [])
+            else{
 
+            }
+        }
+        catch(err) {
+            console.error("OAuth error", err);
+        }
+    }, []);
 
     return (
         <View style={styles.container}>
+            <StatusBar barStyle="dark-content" />
+
+            <View style={styles.header}>
+                <Text style={styles.title}>Real Estate App</Text>
+            </View>
 
             <TextInput
                 autoCapitalize="none"
                 value={emailAddress}
-                placeholder="E-Mail"
+                placeholder="E-mail"
+                placeholderTextColor="#666"
                 onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
-                style={styles.labelLogin}
+                style={styles.input}
             />
 
             <TextInput
                 value={password}
                 placeholder="Senha"
+                placeholderTextColor="#666"
                 secureTextEntry={true}
                 onChangeText={(password) => setPassword(password)}
-                style={styles.labelLogin}
+                style={styles.input}
             />
 
             <ErrorMessage message={errorMessage} />
 
-            <Pressable style={styles.buttonLogin} onPress={onSignEmailPass}>
-                <Text>Login</Text>
+            <Pressable style={styles.button} onPress={onSignEmailPass}>
+                <Text style={styles.buttonText}>Login</Text>
             </Pressable>
 
-            <Pressable style={styles.buttonLoginOAuth} onPress={onSignOAuth}>
-                <AntDesign name="google" size={24} color="black" />
+            <Pressable style={styles.oAuthButton} onPress={onSignOAuth}>
+                <AntDesign name="google" size={24} color="white" />
             </Pressable>
-
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        padding: 20,
     },
-    labelLogin: {
+    header: {
+        marginBottom: 50,
+        alignItems: 'center',
+    },
+    title: {
+        fontSize: 32,
+        fontWeight: 'bold',
+        color: '#f7b801',
+    },
+    input: {
         marginBottom: 20,
-        marginHorizontal: 20,
-        padding: 10,
-        textAlign: 'center',
-        borderStyle: 'solid',
-        borderColor: 'black',
+        padding: 15,
+        borderColor: '#f7b801',
         borderWidth: 1,
-        borderRadius: 10
+        borderRadius: 10,
+        backgroundColor: '#fff',
+        color: '#333',
+        fontSize: 16,
+        width: '100%',
     },
-    buttonLogin: {
-        margin: 30,
-        backgroundColor: 'lightblue',
+    button: {
+        backgroundColor: '#f7b801',
+        paddingVertical: 15,
+        borderRadius: 10,
         alignItems: 'center',
-        padding: 10,
-        borderRadius: 15
+        marginBottom: 20,
+        width: '100%',
     },
-    buttonLoginOAuth:{
-        padding: 10,
+    buttonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    oAuthButton: {
+        backgroundColor: '#f7b801',
+        padding: 15,
+        borderRadius: 50,
         alignItems: 'center',
-        width: 50,
         alignSelf: 'center',
-        borderColor: 'black',
-        borderWidth: 1,
-        borderRadius: 10
-    }
+        width: 60,
+        height: 60,
+        justifyContent: 'center',
+    },
+    errorText: {
+        color: 'red',
+        textAlign: 'center',
+        marginBottom: 10,
+    },
 });

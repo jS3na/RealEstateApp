@@ -3,6 +3,6 @@ import React from 'react';
 
 export default function Index() {
   
-  return <Redirect href={'/Home'} />
+  return <Redirect href={'/(tabs)/Home'} />
 
 }

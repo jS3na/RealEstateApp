@@ -1,44 +1,52 @@
-import { StyleSheet, Text, View, FlatList } from 'react-native'
-import React from 'react'
-
-import { FontAwesome } from '@expo/vector-icons'
+import { StyleSheet, Text, View, FlatList } from 'react-native';
+import React from 'react';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function Items({ data }) {
     return (
-
         <>
-
-            <Text style={styles.itemsSectionTitle}>Itens Inclusos:</Text>
+            <Text style={styles.itemsSectionTitle}>Items Included:</Text>
 
             <FlatList
                 data={data}
                 scrollEnabled={false}
-                style={{ alignSelf: 'flex-start' }}
+                style={styles.list}
                 renderItem={({ item, index }) => (
                     <View style={styles.itemContainer} key={index}>
-                        <FontAwesome name="check" size={24} color="black" />
-                        <Text>{item}</Text>
+                        <FontAwesome name="check" size={20} color="#4caf50" />
+                        <Text style={styles.itemText}>{item}</Text>
                     </View>
                 )}
                 keyExtractor={(item, index) => index.toString()}
             />
-
         </>
-
-    )
+    );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        paddingHorizontal: 20,
+        marginVertical: 15,
+    },
     itemsSectionTitle: {
-        fontSize: 20,
-        textAlign: 'center',
+        fontSize: 22,
         fontWeight: 'bold',
-        margin: 20
+        color: '#333',
+        marginBottom: 10,
+        textAlign: 'center',
+    },
+    list: {
+        marginTop: 10,
     },
     itemContainer: {
         flexDirection: 'row',
-        gap: 10,
-        alignSelf: 'flex-start',
-        marginLeft: 40
+        alignItems: 'center',
+        marginVertical: 5,
+        paddingHorizontal: 10,
     },
-})
+    itemText: {
+        fontSize: 16,
+        color: '#333',
+        marginLeft: 10,
+    },
+});

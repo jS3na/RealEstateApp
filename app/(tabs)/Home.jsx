@@ -6,7 +6,7 @@ import Slide from '../../components/Home/Slide';
 import Category from '../../components/Home/Category';
 import PopularRealEstateList from '../../components/Home/PopularRealEstateList';
 
-export default function Home() {
+export default function Home() { //Home page
 
     const [refreshing, setRefreshing] = useState(false);
 

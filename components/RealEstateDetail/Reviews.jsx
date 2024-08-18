@@ -24,7 +24,7 @@ export default function Reviews({ data }) {
             })
         })
 
-        ToastAndroid.show('Review Added Successfully!', ToastAndroid.BOTTOM)
+        ToastAndroid.show('Review Added Successfully!', ToastAndroid.BOTTOM);
     }
 
     return (
@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
     containerReviews: {
         padding: 20,
         backgroundColor: 'white',
+        borderRadius: 20,
         width: '100%'
     },
     titleReviews: {
