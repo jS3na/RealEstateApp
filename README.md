@@ -8,7 +8,7 @@ This app is a cutting-edge, user-friendly platform designed to streamline the ma
 
 - 🏠 Home Screen with Cards and categories filter
 
-![App Home](./screenshots/home.jpg)
+<img src="./screenshots/home.jpg" alt="App Home" height="600"/>
 
 - 📋 Display a list of properties with advanced filters by neighborhood, property type, and number of rooms.
 
