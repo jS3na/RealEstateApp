@@ -8,25 +8,25 @@ This app is a cutting-edge, user-friendly platform designed to streamline the ma
 
 - 🏠 Home Screen with Cards and categories filter
 
-<img src="./screenshots/home.jpg" alt="App Home" height="600"/>
+<img src="./screenshots/home.jpg" alt="App Home" height="500"/>
 
 - 📋 Display a list of properties with advanced filters by neighborhood, property type, and number of rooms.
 
-![App Filters](./screenshots/filters.jpg)
+<img src="./screenshots/filters.jpg" alt="App Filters" height="500"/>
 
 - 📱 Detailed view of properties, including images, location, items included, cost details, and full descriptions.
 - ⭐ Review and rating star system
 - 🎠 Image carousel to browse property photos.
 
-![App Real Estate Example](./screenshots/example.jpg)
-![App Real Estate Review](./screenshots/review.jpg)
+<img src="./screenshots/example.jpg" alt="App Real Estate Example" height="500"/>
+<img src="./screenshots/review.jpg" alt="App Real Estate Review" height="500"/>
 
 - 👤 Secure login using Clerk, with support for multiple authentication methods, including OAuth with Google.
 
-![App Login](./screenshots/login.jpg)
+<img src="./screenshots/login.jpg" alt="App Login" height="500"/>
 
 - 🔒 Profile Screen with the Real Estates of the actual user and an add new real estate option
 
-![App Profile](./screenshots/profile.jpg)
-![App My Properties](./screenshots/myproperties.jpg)
-![App Add Property](./screenshots/addproperty.jpg)
+<img src="./screenshots/profile.jpg" alt="App Profile" height="500"/>
+<img src="./screenshots/myproperties.jpg" alt="App My Properties" height="500"/>
+<img src="./screenshots/addproperty.jpg" alt="App Add Property" height="500"/>
